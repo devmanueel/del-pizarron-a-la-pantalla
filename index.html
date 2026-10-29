@@ -27,7 +27,9 @@
     var print = /print-pdf/i.test(q);
     var forceDeck = /modo=presentacion/i.test(q);
     var forceMob = /modo=celular/i.test(q);
-    var small = window.matchMedia('(max-width: 900px), (max-height: 540px)').matches;
+    var small = window.matchMedia('(max-width: 900px), (max-height: 540px), (pointer: coarse) and (max-width: 1100px)').matches;
+    window.__pzMobile = function(){ return window.matchMedia('(max-width: 900px), (max-height: 540px), (pointer: coarse) and (max-width: 1100px)').matches; };
+    window.__pzForced = forceDeck || forceMob || print;
     if (print) H.classList.add('is-print');
     else if (forceMob || (small && !forceDeck)) H.classList.add('mobile');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) H.classList.add('rm');
@@ -420,14 +422,32 @@ html.mobile .ptimer{width:min(300px,80vw)}
 html.mobile .avoid-pop{position:relative; right:auto; bottom:auto; width:60%; margin:18px auto 0; display:none}
 html.mobile .ex.avoid .avoid-pop{display:block}
 html.mobile .docente{width:min(300px,80vw)}
-html.mobile .dock{top:auto; bottom:14px; left:50%; transform:translateX(-50%); border-radius:16px}
-html.mobile .dock.idle{opacity:1; transform:translateX(-50%)}
-html.mobile .dock button{width:46px; height:46px; font-size:18px}
+html.mobile .dock.idle{opacity:1}
 html.mobile .dock button[data-tip]:hover::after{display:none}
 html.mobile .dock .desk{display:none}
-html.mobile #clock{font-size:18px; top:12px; right:12px}
+html.mobile #clock{font-size:18px; top:12px}
 html.mobile .cards-gap{gap:14px}
 html.mobile .panel{border-width:2px}
+
+/* navegación en celular */
+.mnav, .mbar{display:none}
+html.mobile .mnav{display:flex; position:fixed; left:50%; bottom:max(14px, env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:45; align-items:center; gap:6px;
+  padding:6px; border-radius:999px; background:rgba(11,18,32,.82); border:1px solid var(--line); backdrop-filter:blur(12px); box-shadow:0 10px 30px rgba(0,0,0,.45)}
+html.mobile .mnav button{width:50px; height:50px; border-radius:50%; border:0; background:var(--cyan); color:#0B1220; font-size:18px; cursor:pointer}
+html.mobile .mnav button.prev{background:rgba(255,255,255,.1); color:var(--text)}
+html.mobile .mnav button:disabled{opacity:.3}
+html.mobile .mnav span{min-width:62px; text-align:center; font-family:var(--f-display); font-weight:700; font-size:15px; color:var(--text); font-variant-numeric:tabular-nums}
+html.mobile .mbar{display:block; position:fixed; top:0; left:0; height:4px; width:10%; z-index:46; background:linear-gradient(90deg,var(--cyan),var(--mint),var(--amber)); transition:width .4s var(--ease)}
+html.mobile{scroll-snap-type:y proximity}
+html.mobile .reveal .slides>section{scroll-snap-align:start}
+html.mobile .s{padding-bottom:110px}
+html.mobile .dock{top:10px; bottom:auto; left:auto; right:10px; transform:none; padding:4px; gap:2px; border-radius:14px}
+html.mobile .dock.idle{transform:none}
+html.mobile .dock button{width:40px; height:40px; font-size:16px; border-radius:10px}
+html.mobile #clock{left:12px; right:auto}
+.swipe-hint{display:none}
+html.mobile .swipe-hint{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted); margin-top:6px; animation:hint 1.8s ease-in-out infinite}
+@keyframes hint{50%{transform:translateX(10px)}}
 
 /* ---------- Movimiento reducido / impresión ---------- */
 html.rm *, html.rm *::before, html.rm *::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
@@ -476,6 +496,7 @@ html.reveal-print .reveal .slides .pdf-page{overflow:hidden}
         <p class="inst">Docentes de la Tecnicatura Superior en Ciencia de Datos e Inteligencia Artificial · IES N° 1, Sede Abra Pampa</p>
         <p class="event"><i class="fa-solid fa-location-dot"></i>V Jornadas de Investigación y Reflexión de las Prácticas Docentes 2026 · La Quiaca</p>
       </div>
+      <p class="swipe-hint no-read" aria-hidden="true"><i class="fa-solid fa-hand-point-up"></i> Deslizá para pasar <i class="fa-solid fa-arrow-right"></i></p>
     </div>
   </div>
   <aside class="notes">Minuto 0–2 · Rene. Bienvenida y presentación de ambos docentes del IES N° 1, Sede Abra Pampa. Plantear la idea del recorrido: del pizarrón a la pantalla, con la IA como apoyo y el criterio pedagógico al frente.</aside>
@@ -1078,6 +1099,17 @@ html.reveal-print .reveal .slides .pdf-page{overflow:hidden}
     73: { key: 'I', description: 'Iniciar o pausar el temporizador de práctica', fn: function () { Practice.toggle(); } }
   };
 
+  if (!PRINT && !window.__pzForced) {
+    var rT; window.addEventListener('resize', function () {
+      clearTimeout(rT); rT = setTimeout(function () {
+        if (window.__pzMobile() !== MOBILE) {
+          var id = (MOBILE ? curSec : Reveal.getCurrentSlide()).id;
+          location.replace(location.pathname + location.search + '#/' + id); location.reload();
+        }
+      }, 450);
+    });
+  }
+
   if (!MOBILE) {
     Reveal.initialize({
       hash: true, width: 1920, height: 1080, margin: 0, minScale: 0.1, maxScale: 2.5, center: false,
@@ -1100,18 +1132,53 @@ html.reveal-print .reveal .slides .pdf-page{overflow:hidden}
       if (f.classList.contains('prob')) { var vis = $$('#problemas .prob.visible'); var last = vis[vis.length - 1]; setStage(last ? last.dataset.img : null, last || null); }
     });
   } else {
-    // Celular: diapositivas apiladas que se animan al entrar en pantalla
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add('inview');
-          if (en.intersectionRatio > .45 && curSec !== en.target) { curSec = en.target; onEnter(curSec); }
-        }
-      });
-    }, { threshold: [.18, .45] });
-    sections.forEach(function (s) { io.observe(s); });
-    document.addEventListener('keydown', function (e) { var k = KEYS[e.keyCode]; if (k && !e.metaKey && !e.ctrlKey) k.fn(); });
-    // si se gira el teléfono a horizontal grande, recargar en modo presentación
+    // Celular: una diapositiva por pantalla, se pasa deslizando o con botones
+    var bar = document.createElement('div'); bar.className = 'mbar'; document.body.appendChild(bar);
+    var nav = document.createElement('nav'); nav.className = 'mnav'; nav.setAttribute('aria-label', 'Navegación');
+    nav.innerHTML = '<button class="prev" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button><span id="mcount">1 / ' + sections.length + '</span><button class="next" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>';
+    document.body.appendChild(nav);
+    var idxNow = function () { return sections.indexOf(curSec); };
+    function go(d) {
+      var i = Math.max(0, Math.min(sections.length - 1, idxNow() + d));
+      var top = sections[i].getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: top, behavior: RM ? 'auto' : 'smooth' });
+      Sound.slide();
+    }
+    $('.prev', nav).addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
+    $('.next', nav).addEventListener('click', function (e) { e.stopPropagation(); go(1); });
+    function syncNav() {
+      var i = idxNow();
+      $('#mcount').textContent = (i + 1) + ' / ' + sections.length;
+      bar.style.width = ((i + 1) / sections.length * 100) + '%';
+      $('.prev', nav).disabled = i === 0; $('.next', nav).disabled = i === sections.length - 1;
+    }
+    function pickCurrent() {
+      var mid = window.innerHeight * 0.4, found = sections[0];
+      sections.forEach(function (s) { if (s.getBoundingClientRect().top <= mid) found = s; });
+      sections.forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top < window.innerHeight * 0.85 && r.bottom > 0) s.classList.add('inview'); });
+      if (found !== curSec) { curSec = found; onEnter(curSec); }
+      syncNav();
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; pickCurrent(); }); } }, { passive: true });
+    // deslizar a los costados
+    var sx = 0, sy = 0, st = 0;
+    document.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - st < 900) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); return; }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); return; }
+      var k = KEYS[e.keyCode]; if (k) k.fn();
+    });
+    // abrir en la diapositiva del enlace (#/consigna)
+    var h = (location.hash || '').replace(/^#\/?/, '');
+    var target = h && (document.getElementById(h) || sections[parseInt(h, 10)]);
+    if (target && target !== sections[0]) setTimeout(function () { window.scrollTo(0, target.getBoundingClientRect().top + window.pageYOffset); pickCurrent(); }, 60);
+    pickCurrent(); onEnter(curSec);
   }
 })();
 </script>
