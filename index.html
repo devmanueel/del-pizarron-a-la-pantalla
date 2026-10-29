@@ -387,66 +387,114 @@ html.mobile .thanks{font-size:58px}
 html.laser #laser{display:block} html.laser, html.laser *{cursor:none !important}
 .burst{position:fixed; inset:0; z-index:65; pointer-events:none}
 
-/* ---------- Celular (lectura vertical) ---------- */
-html.mobile, html.mobile body{height:auto !important; overflow-x:hidden !important; overflow-y:auto !important}
-html.mobile .reveal{height:auto !important; overflow:visible !important; position:relative}
-html.mobile .reveal .slides{position:relative !important; width:auto !important; height:auto !important; inset:auto !important; left:auto !important; top:auto !important;
-  margin:0 !important; transform:none !important; zoom:1 !important; pointer-events:auto !important; perspective:none}
-html.mobile .reveal .slides>section{display:block !important; position:relative !important; width:auto !important; height:auto !important; min-height:100svh;
-  transform:none !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important; top:auto !important; left:auto !important}
-html.mobile .reveal .slides>section + section{border-top:1px solid var(--line)}
+/* ---------- Celular: carrusel, una diapositiva por pantalla ---------- */
+html.mobile{--fs-hero:42px; --fs-title:26px; --fs-sub:18px; --fs-body:17px; --fs-mid:15px; --fs-small:13px; --fs-label:12px; --gap:16px}
+html.mobile, html.mobile body{height:100% !important; overflow:hidden !important; overscroll-behavior:none}
+html.mobile .reveal{height:100vh !important; height:100svh !important; overflow:hidden !important; position:relative}
+html.mobile .reveal .slides{position:relative !important; display:flex !important; width:100vw !important; height:100vh !important; height:100svh !important;
+  inset:auto !important; left:auto !important; top:auto !important; margin:0 !important; transform:none !important; zoom:1 !important; pointer-events:auto !important; perspective:none;
+  overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch}
+html.mobile .reveal .slides::-webkit-scrollbar{display:none}
+html.mobile .reveal .slides>section{display:block !important; position:relative !important; flex:0 0 100vw; width:100vw !important; height:100% !important; min-height:0;
+  transform:none !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important; top:auto !important; left:auto !important;
+  scroll-snap-align:start; scroll-snap-stop:always; overflow:hidden}
 html.mobile .reveal .fragment{opacity:1 !important; visibility:visible !important; transform:none !important; filter:none !important}
 html.mobile .reveal .controls, html.mobile .reveal .progress, html.mobile .reveal .slide-number{display:none !important}
-html.mobile .s{position:relative; inset:auto; min-height:100svh; justify-content:center; padding-top:84px}
+html.mobile .s{position:absolute; inset:auto; top:0; left:0; width:100%; min-height:100%; padding:70px 18px 104px; justify-content:center; gap:var(--gap)}
 html.mobile .cols, html.mobile .types, html.mobile .tools, html.mobile .closing{grid-template-columns:1fr !important}
-html.mobile .cols{gap:28px}
-html.mobile .kicker{padding:6px 14px; gap:8px}
-html.mobile .brand{position:static; margin-top:8px; font-size:12px}
-html.mobile .source{position:static; font-size:13px}
+html.mobile .cols{gap:16px; flex:none}
+html.mobile .head{gap:8px}
+html.mobile .kicker{padding:5px 12px; gap:8px}
+html.mobile .brand{display:none}
+html.mobile .source{position:static; font-size:12px}
+html.mobile .ic{width:38px; height:38px; font-size:17px; border-radius:11px}
+/* portada */
 html.mobile .cover{padding-top:0; justify-content:flex-start}
-html.mobile .cover-art{position:relative; width:auto; height:42svh; margin:0 calc(var(--pad-x)*-1)}
-html.mobile .cover-art .ph{-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent); mask-image:linear-gradient(180deg,#000 55%,transparent)}
-html.mobile .cover-text{margin-top:-14svh}
-html.mobile .meta .names{font-size:17px}
-html.mobile .step:hover, html.mobile .need:hover, html.mobile .q:hover, html.mobile .qrow.hot{transform:none}
-html.mobile .stage{width:min(330px,82vw); padding:4px; border-radius:22px} html.mobile .stage-in{border-radius:19px}
-html.mobile .stage-n{top:-14px; right:-10px}
-html.mobile .venn{width:min(340px,86vw)}
-html.mobile .donut{width:min(260px,70vw)}
-html.mobile .tool{flex-direction:row; text-align:left; padding:18px} html.mobile .tool .arr{transform:rotate(-90deg); animation:none}
-html.mobile .tool .logo{width:110px; height:64px; flex:none; padding:10px 12px; border-radius:16px}
-html.mobile .tool .logo.icon{padding:6px}
-html.mobile .tool h3{min-width:0}
-html.mobile .tool>div.txt{display:flex; flex-direction:column; gap:4px}
-html.mobile .ptimer{width:min(300px,80vw)}
-html.mobile .avoid-pop{position:relative; right:auto; bottom:auto; width:60%; margin:18px auto 0; display:none}
-html.mobile .ex.avoid .avoid-pop{display:block}
-html.mobile .docente{width:min(300px,80vw)}
-html.mobile .dock.idle{opacity:1}
+html.mobile .cover-art{position:relative; width:auto; height:36vh; height:36svh; margin:0 -18px; flex:none}
+html.mobile .cover-art .ph{-webkit-mask-image:linear-gradient(180deg,#000 50%,transparent); mask-image:linear-gradient(180deg,#000 50%,transparent)}
+html.mobile .cover-text{margin-top:-9svh; gap:14px}
+html.mobile .meta{gap:6px; padding-left:12px; margin-top:4px}
+html.mobile .meta .names{font-size:15px}
+/* agenda */
+html.mobile .steps{gap:8px}
+html.mobile .step{padding:10px 14px; gap:12px}
+html.mobile .step .num{width:34px; height:34px; font-size:17px}
+html.mobile .step .ok{font-size:18px}
+html.mobile .donut{width:120px; justify-self:start}
+html.mobile .donut-c b{font-size:46px} html.mobile .donut-c span{font-size:12px}
+/* verosímil */
+html.mobile .bul{gap:12px} html.mobile .bul li{gap:12px}
+html.mobile .comic{flex-direction:row; gap:8px}
+html.mobile .panel{border-width:2px; border-radius:12px; flex:1}
+/* problemas */
+html.mobile .prob{padding:6px 10px 6px 6px; gap:12px}
+html.mobile .probs{gap:4px}
+html.mobile .stage{width:min(150px,42vw); padding:4px; border-radius:20px} html.mobile .stage-in{border-radius:17px}
+html.mobile .stage-n{top:-12px; right:-12px; width:40px; height:40px; font-size:22px}
+html.mobile .stage-ph{font-size:70px}
+/* tpack */
+html.mobile .venn{width:min(180px,50vw)}
+html.mobile .tp{gap:8px}
+html.mobile .qrow{padding:10px 14px}
+html.mobile .rule{gap:6px}
+html.mobile .rule .chip{padding:4px 10px}
+/* tipos */
+html.mobile .types{gap:10px; flex:none}
+html.mobile .card{padding:14px; gap:12px; border-radius:16px}
+html.mobile .card h3{font-size:17px; margin-bottom:2px}
+html.mobile .badge-eye{font-size:16px; top:10px; right:12px}
+/* herramientas */
+html.mobile .tools{gap:10px; flex:none}
+html.mobile .tool{flex-direction:row; text-align:left; padding:14px; gap:14px; border-radius:18px}
+html.mobile .tool .logo{width:96px; height:56px; flex:none; padding:8px 10px; border-radius:14px; transform:none}
+html.mobile .tool .logo.icon{padding:5px}
+html.mobile .tool h3{font-size:20px}
+html.mobile .tool .txt{display:flex; flex-direction:column; gap:2px}
+html.mobile .tool .arr{display:none}
+html.mobile .tool p{font-size:16px}
+/* consigna */
+html.mobile .needs .lbl{margin-bottom:8px}
+html.mobile .needs ol{gap:4px}
+html.mobile .need{padding:6px 8px 6px 6px; gap:10px}
+html.mobile .need .n{width:30px; height:30px; font-size:15px; border-radius:9px}
+html.mobile .ex-card{padding:14px 16px; border-radius:18px}
+html.mobile .ex-head{margin-bottom:6px}
+html.mobile .prompt{font-size:15px; line-height:1.45; min-height:0}
+html.mobile .ex-foot{margin-top:10px; padding-top:8px}
+html.mobile .send{width:38px; height:38px; font-size:15px}
+html.mobile .avoid-pop{right:-6px; bottom:-20px; width:42%; border-width:3px}
+/* práctica */
+html.mobile .phases{gap:6px}
+html.mobile .ph{padding:8px 12px; gap:12px}
+html.mobile .ph .m{min-width:62px; font-size:15px; padding:6px 8px; border-radius:10px}
+html.mobile .ptimer{width:min(150px,42vw); gap:6px}
+html.mobile .ring-c b{font-size:32px} html.mobile .ring-c span{font-size:11px}
+html.mobile .pt-btns button{width:40px; height:40px; font-size:15px}
+/* cierre */
+html.mobile .qs{gap:8px}
+html.mobile .q{padding:10px 14px; gap:12px; font-size:17px}
+html.mobile .docente{display:none}
+html.mobile .closing{gap:8px}
+html.mobile .cierre{padding:12px 14px; border-left-width:4px}
+html.mobile .thanks{font-size:44px; text-align:center}
+html.mobile .step:hover, html.mobile .need:hover, html.mobile .q:hover, html.mobile .qrow.hot, html.mobile .need.on, html.mobile .q.on, html.mobile .step.hot{transform:none}
+/* barra superior y navegación */
+html.mobile .dock{top:12px; bottom:auto; left:auto; right:12px; transform:none; padding:3px; gap:2px; border-radius:13px}
+html.mobile .dock.idle{opacity:1; transform:none}
+html.mobile .dock button{width:38px; height:38px; font-size:15px; border-radius:10px}
 html.mobile .dock button[data-tip]:hover::after{display:none}
 html.mobile .dock .desk{display:none}
-html.mobile #clock{font-size:18px; top:12px}
-html.mobile .cards-gap{gap:14px}
-html.mobile .panel{border-width:2px}
-
-/* navegación en celular */
+html.mobile #clock{font-size:16px; top:14px; left:12px; right:auto; padding:6px 12px}
 .mnav, .mbar{display:none}
-html.mobile .mnav{display:flex; position:fixed; left:50%; bottom:max(14px, env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:45; align-items:center; gap:6px;
-  padding:6px; border-radius:999px; background:rgba(11,18,32,.82); border:1px solid var(--line); backdrop-filter:blur(12px); box-shadow:0 10px 30px rgba(0,0,0,.45)}
-html.mobile .mnav button{width:50px; height:50px; border-radius:50%; border:0; background:var(--cyan); color:#0B1220; font-size:18px; cursor:pointer}
+html.mobile .mnav{display:flex; position:fixed; left:50%; bottom:calc(16px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:45; align-items:center; gap:4px;
+  padding:5px; border-radius:999px; background:rgba(11,18,32,.88); border:1px solid var(--line); backdrop-filter:blur(12px); box-shadow:0 10px 30px rgba(0,0,0,.45)}
+html.mobile .mnav button{width:46px; height:46px; border-radius:50%; border:0; background:var(--cyan); color:#0B1220; font-size:17px; cursor:pointer}
 html.mobile .mnav button.prev{background:rgba(255,255,255,.1); color:var(--text)}
 html.mobile .mnav button:disabled{opacity:.3}
-html.mobile .mnav span{min-width:62px; text-align:center; font-family:var(--f-display); font-weight:700; font-size:15px; color:var(--text); font-variant-numeric:tabular-nums}
-html.mobile .mbar{display:block; position:fixed; top:0; left:0; height:4px; width:10%; z-index:46; background:linear-gradient(90deg,var(--cyan),var(--mint),var(--amber)); transition:width .4s var(--ease)}
-html.mobile{scroll-snap-type:y proximity}
-html.mobile .reveal .slides>section{scroll-snap-align:start}
-html.mobile .s{padding-bottom:110px}
-html.mobile .dock{top:10px; bottom:auto; left:auto; right:10px; transform:none; padding:4px; gap:2px; border-radius:14px}
-html.mobile .dock.idle{transform:none}
-html.mobile .dock button{width:40px; height:40px; font-size:16px; border-radius:10px}
-html.mobile #clock{left:12px; right:auto}
+html.mobile .mnav span{min-width:58px; text-align:center; font-family:var(--f-display); font-weight:700; font-size:14px; color:var(--text); font-variant-numeric:tabular-nums}
+html.mobile .mbar{display:block; position:fixed; top:0; left:0; height:3px; width:10%; z-index:46; background:linear-gradient(90deg,var(--cyan),var(--mint),var(--amber)); transition:width .4s var(--ease)}
 .swipe-hint{display:none}
-html.mobile .swipe-hint{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted); margin-top:6px; animation:hint 1.8s ease-in-out infinite}
+html.mobile .swipe-hint{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); animation:hint 1.8s ease-in-out infinite}
 @keyframes hint{50%{transform:translateX(10px)}}
 
 /* ---------- Movimiento reducido / impresión ---------- */
@@ -1132,53 +1180,62 @@ html.reveal-print .reveal .slides .pdf-page{overflow:hidden}
       if (f.classList.contains('prob')) { var vis = $$('#problemas .prob.visible'); var last = vis[vis.length - 1]; setStage(last ? last.dataset.img : null, last || null); }
     });
   } else {
-    // Celular: una diapositiva por pantalla, se pasa deslizando o con botones
+    // Celular: carrusel horizontal, una diapositiva por pantalla que siempre entra completa
+    var track = $('.reveal .slides');
     var bar = document.createElement('div'); bar.className = 'mbar'; document.body.appendChild(bar);
     var nav = document.createElement('nav'); nav.className = 'mnav'; nav.setAttribute('aria-label', 'Navegación');
     nav.innerHTML = '<button class="prev" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button><span id="mcount">1 / ' + sections.length + '</span><button class="next" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>';
     document.body.appendChild(nav);
-    var idxNow = function () { return sections.indexOf(curSec); };
-    function go(d) {
-      var i = Math.max(0, Math.min(sections.length - 1, idxNow() + d));
-      var top = sections[i].getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: top, behavior: RM ? 'auto' : 'smooth' });
-      Sound.slide();
-    }
+    function idxNow() { return Math.max(0, Math.min(sections.length - 1, Math.round(track.scrollLeft / track.clientWidth))); }
+    function goTo(i, instant) { i = Math.max(0, Math.min(sections.length - 1, i)); track.scrollTo({ left: i * track.clientWidth, behavior: (RM || instant) ? 'auto' : 'smooth' }); }
+    function go(d) { goTo(idxNow() + d); }
     $('.prev', nav).addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
     $('.next', nav).addEventListener('click', function (e) { e.stopPropagation(); go(1); });
-    function syncNav() {
-      var i = idxNow();
+    function syncNav(i) {
       $('#mcount').textContent = (i + 1) + ' / ' + sections.length;
       bar.style.width = ((i + 1) / sections.length * 100) + '%';
       $('.prev', nav).disabled = i === 0; $('.next', nav).disabled = i === sections.length - 1;
     }
     function pickCurrent() {
-      var mid = window.innerHeight * 0.4, found = sections[0];
-      sections.forEach(function (s) { if (s.getBoundingClientRect().top <= mid) found = s; });
-      sections.forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top < window.innerHeight * 0.85 && r.bottom > 0) s.classList.add('inview'); });
-      if (found !== curSec) { curSec = found; onEnter(curSec); }
-      syncNav();
+      var i = idxNow(), sec = sections[i];
+      sec.classList.add('inview');
+      if (sec !== curSec) { curSec = sec; onEnter(sec); Sound.slide(); try { history.replaceState(null, '', '#/' + sec.id); } catch (e) {} }
+      syncNav(i);
     }
     var ticking = false;
-    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; pickCurrent(); }); } }, { passive: true });
-    // deslizar a los costados
-    var sx = 0, sy = 0, st = 0;
-    document.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
-    document.addEventListener('touchend', function (e) {
-      var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
-      if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - st < 900) go(dx < 0 ? 1 : -1);
-    }, { passive: true });
+    track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; pickCurrent(); }); } }, { passive: true });
     document.addEventListener('keydown', function (e) {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); return; }
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); return; }
       var k = KEYS[e.keyCode]; if (k) k.fn();
     });
+    // achica cada diapositiva lo justo para que entre entera en la pantalla
+    function fit() {
+      sections.forEach(function (sec) {
+        var s = $('.s', sec), W = sec.clientWidth, avail = sec.clientHeight;
+        s.style.transform = ''; s.style.width = W + 'px'; s.style.minHeight = '0px';
+        var h = s.scrollHeight, z = 1;
+        for (var k = 0; k < 4 && h > avail + 1; k++) {
+          z = Math.max(0.62, Math.min(1, z * avail / h));
+          s.style.width = (W / z) + 'px'; h = s.scrollHeight;
+          if (h * z <= avail + 1) break;
+        }
+        s.style.minHeight = (avail / z) + 'px';
+        s.style.transformOrigin = '0 0';
+        s.style.transform = z < 1 ? 'scale(' + z + ')' : '';
+      });
+    }
+    var fT; function refit() { clearTimeout(fT); fT = setTimeout(function () { var i = idxNow(); fit(); goTo(i, true); }, 120); }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+    window.addEventListener('load', refit);
+    window.addEventListener('resize', refit);
     // abrir en la diapositiva del enlace (#/consigna)
     var h = (location.hash || '').replace(/^#\/?/, '');
-    var target = h && (document.getElementById(h) || sections[parseInt(h, 10)]);
-    if (target && target !== sections[0]) setTimeout(function () { window.scrollTo(0, target.getBoundingClientRect().top + window.pageYOffset); pickCurrent(); }, 60);
-    pickCurrent(); onEnter(curSec);
+    var target = h ? sections.indexOf(document.getElementById(h)) : -1;
+    if (target > 0) setTimeout(function () { goTo(target, true); pickCurrent(); }, 80);
+    sections[0].classList.add('inview'); syncNav(0); onEnter(curSec);
   }
 })();
 </script>
